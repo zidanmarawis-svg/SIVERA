@@ -53,23 +53,39 @@
               <input class="form-control" name="status_rumah" placeholder="Milik Sendiri / Sewa">
             </div>
             <div class="col-md-4">
-              <label class="form-label small fw-bold">Kondisi Rumah (1-5)</label>
-              <input class="form-control" type="number" min="1" max="5" name="kondisi_rumah" value="3">
-              <small class="text-muted">1: Sangat Buruk, 5: Sangat Baik</small>
-            </div>
+      <label class="form-label small fw-bold">Kondisi Rumah</label>
+      <select class="form-select" name="kondisi_rumah" required>
+        <option value="" disabled selected>-- Pilih Kondisi --</option>
+        <option value="1">1 - Sangat Buruk (Misal: Bedinding bambu, lantai tanah)</option>
+        <option value="2">2 - Buruk</option>
+        <option value="3" selected>3 - Cukup / Standar</option>
+        <option value="4">4 - Baik</option>
+        <option value="5">5 - Sangat Baik (Misal: Tembok permanen, keramik)</option>
+      </select>
+    </div>
             <div class="col-md-4">
-              <label class="form-label small fw-bold">Kepemilikan Aset (1-5)</label>
-              <input class="form-control" type="number" min="1" max="5" name="kepemilikan_aset" value="3">
-              <small class="text-muted">1: Tidak Punya, 5: Banyak Aset</small>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-md-4">
-              <label class="form-label small fw-bold">Status Pekerjaan (1-5)</label>
-              <input class="form-control" type="number" min="1" max="5" name="status_pekerjaan_skor" value="3">
-              <small class="text-muted">1: Tidak Tetap, 5: Tetap</small>
-            </div>
-          </div>
+      <label class="form-label small fw-bold">Kepemilikan Aset</label>
+      <select class="form-select" name="kepemilikan_aset" required>
+        <option value="" disabled selected>-- Pilih Aset --</option>
+        <option value="1">1 - Tidak Punya Aset Berharga</option>
+        <option value="2">2 - Sedikit (Misal: HP biasa, sepeda)</option>
+        <option value="3" selected>3 - Cukup (Misal: Motor)</option>
+        <option value="4">4 - Banyak (Misal: Mobil, tanah)</option>
+        <option value="5">5 - Sangat Banyak (Aset > 2 unit)</option>
+      </select>
+    </div>
+          <div class="col-md-4">
+      <label class="form-label small fw-bold">Status Pekerjaan</label>
+      <select class="form-select" name="status_pekerjaan_skor" required>
+        <option value="" disabled selected>-- Pilih Pekerjaan --</option>
+        <option value="1">1 - Tidak Tetap (Buruh lepas, serabutan)</option>
+        <option value="2">2 - Kurang Tetap</option>
+        <option value="3" selected>3 - Cukup Tetap (Karyawan kontrak)</option>
+        <option value="4">4 - Tetap (Karyawan tetap, PNS)</option>
+        <option value="5">5 - Sangat Tetap & Mapan</option>
+      </select>
+    </div>
+</div>
 
           <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">C. Unggah Dokumen Pendukung (Maks 2MB)</h6>
           <div class="row mb-4">

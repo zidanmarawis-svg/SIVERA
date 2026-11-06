@@ -1,8 +1,8 @@
 # routes/admin.py
 # CRUD kriteria, dashboard, export.
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, abort
 from flask_login import login_required, current_user
-from models import db, Kriteria, Pengajuan, User, AuditLog, Pengaturan
+from models import HasilPenilaian, db, Kriteria, Pengajuan, User, AuditLog, Pengaturan
 from routes.auth import role_required
 import io
 from openpyxl import Workbook
@@ -70,3 +70,20 @@ def export_excel():
 def audit():
     logs = AuditLog.query.order_by(AuditLog.waktu.desc()).limit(200).all()
     return render_template('admin/audit.html', logs=logs)
+
+# routes/admin.py (Tambahkan di bagian paling bawah)
+
+@admin_bp.route('/peringkat-bantuan')
+@login_required
+def peringkat_bantuan():
+    # Cek manual: Hanya Admin dan Staf yang boleh masuk
+    if current_user.role not in ['admin', 'staf']:
+        abort(403)
+        
+    # Ambil data gabungan, urutkan dari skor SAW tertinggi
+    daftar_peringkat = db.session.query(HasilPenilaian, Pengajuan)\
+        .join(Pengajuan, HasilPenilaian.pengajuan_id == Pengajuan.id)\
+        .order_by(HasilPenilaian.skor_saw.desc())\
+        .all()
+        
+    return render_template('peringkat.html', daftar=daftar_peringkat)

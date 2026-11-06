@@ -25,6 +25,7 @@ def create_app():
     from routes.staf import staf_bp
     from routes.admin import admin_bp
     from routes.api import api_bp
+    from flask import send_from_directory
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(warga_bp)
@@ -43,6 +44,9 @@ def create_app():
             return redirect(url_for('staf.verifikasi'))
         return redirect(url_for('admin.dashboard'))
 
+    @app.route('/uploads/<path:filename>')
+    def uploaded_file(filename):
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     return app
 
 

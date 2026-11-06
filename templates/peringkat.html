@@ -1,0 +1,87 @@
+<!-- templates/peringkat.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold mb-1">Peringkat Rekomendasi Bantuan</h3>
+    <p class="text-muted mb-0">Urutan warga berdasarkan skor kelayakan tertinggi.</p>
+  </div>
+  {% if current_user.role == 'admin' %}
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">&larr; Kembali ke Dashboard</a>
+  {% else %}
+    <a href="{{ url_for('staf.verifikasi') }}" class="btn btn-outline-secondary">&larr; Kembali ke Verifikasi</a>
+  {% endif %}
+</div>
+
+<div class="card shadow-sm border-0" style="border-radius: 15px;">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th width="8%" class="text-center py-3">Rank</th>
+            <th>Profil Warga</th>
+            <th>Skor SAW</th>
+            <th>Rekomendasi Bantuan</th>
+            <th>Status Sistem</th>
+            <th class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for hasil, pengajuan in daftar %}
+          <tr>
+            <!-- Rank -->
+            <td class="text-center fw-bold fs-5">
+              {% if loop.index == 1 %}
+                <span class="badge bg-warning text-dark rounded-circle p-2"><i class="bi bi-trophy-fill"></i> 1</span>
+              {% else %}
+                <span class="text-muted">{{ loop.index }}</span>
+              {% endif %}
+            </td>
+            
+            <!-- Profil -->
+            <td>
+              <div class="fw-bold">{{ pengajuan.nama }}</div>
+              <small class="text-muted">NIK: {{ pengajuan.nik }}</small>
+            </td>
+            
+            <!-- Skor -->
+            <td>
+              <span class="fw-bold text-primary fs-5">{{ hasil.skor_saw }}</span>
+              <div class="small text-muted">{{ hasil.kategori_saw|capitalize }}</div>
+            </td>
+            
+            <!-- Bantuan -->
+            <td>
+              {% if hasil.rekomendasi_bantuan %}
+                <span class="badge bg-info text-dark px-2 py-1">{{ hasil.rekomendasi_bantuan }}</span>
+              {% else %}
+                <span class="text-muted small">-</span>
+              {% endif %}
+            </td>
+            
+            <!-- Status -->
+            <td>
+              {% if hasil.status_gabungan == 'Rekomendasi Yakin' %}
+                <span class="badge bg-success">Yakin</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Review</span>
+              {% endif %}
+            </td>
+            
+            <!-- Aksi -->
+            <td class="text-center">
+              <a href="{{ url_for('staf.detail', pid=pengajuan.id) }}" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="text-center py-5 text-muted">Belum ada data dinilai.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

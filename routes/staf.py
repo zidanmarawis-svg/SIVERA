@@ -4,7 +4,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from models import db, Pengajuan, HasilPenilaian, Verifikasi, AuditLog, DokumenPengajuan
 from routes.auth import role_required
-
+from flask import send_from_directory
+import os
+from flask import current_app
 staf_bp = Blueprint('staf', __name__)
 
 
@@ -27,8 +29,9 @@ def verifikasi():
 
 @staf_bp.route('/verifikasi/<int:pid>', methods=['GET', 'POST'])
 @login_required
-@role_required('staf')
 def detail(pid):
+    if current_user.role not in ['staf', 'admin']:
+        abort(403)
     p = Pengajuan.query.get_or_404(pid)
     hasil = HasilPenilaian.query.filter_by(pengajuan_id=pid).first()
     dokumen = DokumenPengajuan.query.filter_by(pengajuan_id=pid).all()
@@ -50,3 +53,23 @@ def detail(pid):
         return redirect(url_for('staf.verifikasi'))
 
     return render_template('staf/detail.html', p=p, hasil=hasil, dokumen=dokumen)
+
+@staf_bp.route('/dokumen/<int:dok_id>')
+@login_required
+def lihat_dokumen(dok_id):
+    # Cek hak akses: hanya staf dan admin
+    if current_user.role not in ['staf', 'admin']:
+        abort(403)
+        
+    # Ambil data dokumen dari database
+    dok = DokumenPengajuan.query.get_or_404(dok_id)
+    
+    # Tentukan path folder upload dari config
+    upload_folder = current_app.config['UPLOAD_FOLDER']
+    
+    # Cek apakah file berekstensi gambar atau PDF
+    ext = dok.filename.rsplit('.', 1)[1].lower() if '.' in dok.filename else ''
+    is_pdf = (ext == 'pdf')
+    
+    # Render halaman HTML preview
+    return render_template('staf/preview_dokumen.html', dok=dok, is_pdf=is_pdf, upload_folder=upload_folder)

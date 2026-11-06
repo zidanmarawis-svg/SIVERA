@@ -1,0 +1,25 @@
+<!-- templates/staf/preview_dokumen.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold mb-1">Pratinjau Dokumen</h3>
+    <p class="text-muted mb-0">Jenis: <span class="badge bg-primary">{{ dok.jenis }}</span></p>
+  </div>
+  <button onclick="window.history.back()" class="btn btn-outline-secondary">&larr; Kembali</button>
+</div>
+
+<div class="card shadow-sm border-0" style="border-radius: 15px;">
+  <div class="card-body p-0 text-center bg-dark" style="min-height: 500px; display: flex; align-items: center; justify-content: center;">
+    
+    {% if is_pdf %}
+      <!-- Jika PDF, tampilkan menggunakan iframe -->
+      <iframe src="/uploads/{{ dok.filename }}" width="100%" height="600px" style="border: none;"></iframe>
+    {% else %}
+      <!-- Jika Gambar, tampilkan menggunakan tag img -->
+      <img src="/uploads/{{ dok.filename }}" alt="Dokumen {{ dok.jenis }}" class="img-fluid" style="max-height: 70vh; object-fit: contain;">
+    {% endif %}
+    
+  </div>
+</div>
+{% endblock %}
